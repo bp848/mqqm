@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><title>Kill SW</title>
+<script>
+(async()=>{try{
+ if('serviceWorker'in navigator){
+  const r=await navigator.serviceWorker.getRegistrations();
+  await Promise.all(r.map(x=>x.unregister()));
+  const ks=await caches.keys();
+  await Promise.all(ks.map(k=>caches.delete(k)));
+ }
+ const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
+ location.replace(redirectUrl || '/');
+}catch(e){
+ const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
+ location.replace(redirectUrl || '/');
+}})();
+</script>解除中…
