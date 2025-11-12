@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+// FIX: Add missing import for submitApplication.
 import { submitApplication } from '../../services/dataService.ts';
 import { extractInvoiceDetails } from '../../services/geminiService.ts';
 import ApprovalRouteSelector from './ApprovalRouteSelector.tsx';
@@ -40,7 +41,6 @@ interface ExpenseDetail {
 
 const readFileAsBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-        const reader = new FileReader();
         reader.onload = () => typeof reader.result === 'string' ? resolve(reader.result.split(',')[1]) : reject("Read failed");
         reader.onerror = error => reject(error);
         reader.readAsDataURL(file);
@@ -50,7 +50,15 @@ const readFileAsBase64 = (file: File): Promise<string> => {
 const ExpenseReimbursementForm: React.FC<ExpenseReimbursementFormProps> = ({ onSuccess, applicationCodeId, currentUser, customers, accountItems, jobs, purchaseOrders, departments, isAIOff, isLoading, error: formLoadError, allocationDivisions }) => {
     const [departmentId, setDepartmentId] = useState<string>('');
     // TODO: Implement the full form logic here
-    return <div>経費精算フォームは現在開発中です。</div>;
+    // For now, return a placeholder to resolve the error.
+    return (
+        <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm text-center">
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-4">経費精算フォーム</h2>
+            <AlertTriangle className="w-12 h-12 text-red-500 mx-auto" />
+            <p className="mt-4 text-slate-600 dark:text-slate-400">経費精算フォームは現在開発中です。</p>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-500">お手数ですが、手動での入力をお待ちください。</p>
+        </div>
+    );
 };
 
 export default ExpenseReimbursementForm;

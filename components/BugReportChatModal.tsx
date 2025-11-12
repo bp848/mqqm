@@ -3,6 +3,7 @@ import { startBugReportChat } from '../services/geminiService';
 import { Chat } from '@google/genai';
 import { X, Loader, Send, Sparkles } from './Icons';
 import { BugReport } from '../types';
+import { safeJsonParse } from '../services/safeJsonParse';
 
 interface BugReportChatModalProps {
     isOpen: boolean;
@@ -87,7 +88,7 @@ const BugReportChatModal: React.FC<BugReportChatModalProps> = ({ isOpen, onClose
             
             // After streaming, try to parse as JSON
             try {
-                const parsed = JSON.parse(fullResponse);
+                const parsed = safeJsonParse(fullResponse);
                 if(parsed.report_type && parsed.summary && parsed.description) {
                     await onReportSubmit(parsed);
                     const successMessage = `「${parsed.summary}」という内容で報告を受け付けました。ご協力ありがとうございます！このウィンドウは3秒後に閉じます。`;

@@ -87,7 +87,7 @@ export const suggestJobParameters = async (prompt: string, paperTypes: string[],
     if (jsonStr.startsWith('```json')) {
         jsonStr = jsonStr.substring(7, jsonStr.length - 3).trim();
     }
-    return safeJsonParse(jsonStr);
+    return safeJsonParse(jsonStr) as AISuggestions; // FIX: Explicitly cast to AISuggestions
   });
 };
 
@@ -129,12 +129,12 @@ JSONのフォーマットは以下のようにしてください:
         }
 
         try {
-            const result = safeJsonParse(jsonStr);
+            const result = safeJsonParse(jsonStr) as Omit<CompanyAnalysis, 'sources'>; // FIX: Cast result
             const rawChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
             const sources = rawChunks.map((chunk: any) => chunk.web).filter(Boolean).map((webChunk: any) => ({ uri: webChunk.uri, title: webChunk.title }));
             const uniqueSources = Array.from(new Map(sources.map(item => [item.uri, item])).values());
             
-            return { ...result, sources: uniqueSources };
+            return { ...result, sources: uniqueSources }; // FIX: Spread operator with typed object
         } catch (e) {
             console.error("Failed to parse JSON from Gemini:", e);
             // Fallback: return the text as part of the analysis.
@@ -201,12 +201,12 @@ export const enrichCustomerData = async (customerName: string): Promise<Partial<
             jsonStr = jsonStr.substring(7, jsonStr.length - 3).trim();
         }
         
-        const parsed = safeJsonParse(jsonStr);
+        const parsed: Partial<Customer> = safeJsonParse(jsonStr) as Partial<Customer>; // FIX: Cast parsed to Partial<Customer>
         
         const cleanedData: Partial<Customer> = {};
-        for (const key in parsed) {
-            if (parsed[key] !== null && parsed[key] !== undefined) {
-                cleanedData[key as keyof Customer] = parsed[key];
+        for (const key in parsed) { // FIX: parsed is now Partial<Customer>, allowing for...in
+            if (parsed[key as keyof Partial<Customer>] !== null && parsed[key as keyof Partial<Customer>] !== undefined) {
+                cleanedData[key as keyof Customer] = parsed[key as keyof Partial<Customer>];
             }
         }
         return cleanedData;
@@ -247,7 +247,7 @@ export const extractInvoiceDetails = async (imageBase64: string, mimeType: strin
         if (jsonStr.startsWith('```json')) {
             jsonStr = jsonStr.substring(7, jsonStr.length - 3).trim();
         }
-        return safeJsonParse(jsonStr);
+        return safeJsonParse(jsonStr) as InvoiceData; // FIX: Explicitly cast to InvoiceData
     });
 };
 
@@ -276,7 +276,7 @@ export const suggestJournalEntry = async (prompt: string): Promise<AIJournalSugg
     if (jsonStr.startsWith('```json')) {
         jsonStr = jsonStr.substring(7, jsonStr.length - 3).trim();
     }
-    return safeJsonParse(jsonStr);
+    return safeJsonParse(jsonStr) as AIJournalSuggestion; // FIX: Explicitly cast to AIJournalSuggestion
   });
 };
 
@@ -327,7 +327,7 @@ export const generateLeadReplyEmail = async (lead: Lead): Promise<GeneratedEmail
             },
         });
         const jsonStr = response.text.trim().replace(/^```json\n|\n```$/g, ''); // Clean JSON block
-        return safeJsonParse(jsonStr);
+        return safeJsonParse(jsonStr) as GeneratedEmailContent; // FIX: Explicitly cast to GeneratedEmailContent
     });
 };
 
@@ -418,7 +418,7 @@ Web検索を活用して、企業の事業内容、最近の動向、および�
         }
         
         try {
-            return safeJsonParse(jsonStr);
+            return safeJsonParse(jsonStr) as LeadProposalPackage; // FIX: Explicitly cast to LeadProposalPackage
         } catch (e) {
             console.error("Failed to parse JSON from Gemini for proposal package:", e, "Raw text:", jsonStr);
             return {
@@ -506,7 +506,7 @@ export const parseLineItems = async (prompt: string): Promise<EstimateLineItem[]
   if (jsonStr.startsWith('```json')) {
       jsonStr = jsonStr.substring(7, jsonStr.length - 3).trim();
   }
-  return safeJsonParse(jsonStr);
+  return safeJsonParse(jsonStr) as EstimateLineItem[]; // FIX: Explicitly cast to EstimateLineItem[]
 };
 
 
@@ -651,8 +651,8 @@ export async function createDraftEstimate(inputText: string, files: { data: stri
             jsonStr = jsonStr.substring(7, jsonStr.length - 3).trim();
         }
 
-        const draft = safeJsonParse(jsonStr);
-        if (!draft.draftId) {
+        const draft: EstimateDraft = safeJsonParse(jsonStr) as EstimateDraft; // FIX: Cast to EstimateDraft
+        if (!draft.draftId) { // FIX: Property exists after casting
             draft.draftId = uuidv4();
         }
         return draft;
@@ -723,7 +723,7 @@ export const parseApprovalDocument = async (imageBase64: string, mimeType: strin
         if (jsonStr.startsWith('```json')) {
             jsonStr = jsonStr.substring(7, jsonStr.length - 3).trim();
         }
-        return safeJsonParse(jsonStr);
+        return safeJsonParse(jsonStr) as { title: string; details: string; }; // FIX: Explicitly cast return type
     });
 };
 
@@ -853,7 +853,6 @@ export const createProjectFromInputs = async (text: string, files: {name: string
                 extracted_details: { type: Type.STRING, description: "AIが抽出した主要な仕様や要件" },
                 file_categorization: {
                     type: Type.ARRAY,
-                    description: "添付ファイルのカテゴリ分類",
                     items: {
                         type: Type.OBJECT,
                         properties: {
@@ -881,7 +880,13 @@ export const createProjectFromInputs = async (text: string, files: {name: string
         if (jsonStr.startsWith('```json')) {
             jsonStr = jsonStr.substring(7, jsonStr.length - 3).trim();
         }
-        return safeJsonParse(jsonStr);
+        return safeJsonParse(jsonStr) as { // FIX: Explicitly cast to the expected type
+            projectName: string;
+            customerName: string;
+            overview: string;
+            extracted_details: string;
+            file_categorization: { fileName: string, category: string }[];
+        };
     });
 };
 
@@ -930,12 +935,12 @@ Web検索を活用し、市場規模、成長率、主要プレイヤー、SWOT�
             jsonStr = jsonStr.substring(7, jsonStr.length - 3).trim();
         }
 
-        const result = safeJsonParse(jsonStr);
+        const result = safeJsonParse(jsonStr) as Omit<MarketResearchReport, 'sources'>; // FIX: Cast to expected type
         const rawChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
         const sources = rawChunks.map((chunk: any) => chunk.web).filter(Boolean).map((webChunk: any) => ({ uri: webChunk.uri, title: webChunk.title }));
         const uniqueSources = Array.from(new Map(sources.map(item => [item.uri, item])).values());
         
-        return { ...result, sources: uniqueSources };
+        return { ...result, sources: uniqueSources }; // FIX: Spread operator with typed object
     });
 };
 

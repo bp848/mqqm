@@ -1,16 +1,18 @@
 import React from 'react';
-import JournalLedger from './JournalLedger.tsx';
-import GeneralLedger from './accounting/GeneralLedger.tsx';
-import TrialBalancePage from './accounting/TrialBalancePage.tsx';
-// FIX: Corrected import path for InvoiceOCR. It's in the same directory.
-import InvoiceOCR from './InvoiceOCR.tsx';
-import PaymentManagement from './accounting/PaymentManagement.tsx';
-import LaborCostManagement from './accounting/LaborCostManagement.tsx';
-import PeriodClosingPage from './accounting/PeriodClosingPage.tsx';
+// FIX: Corrected import path for JournalLedger.
+import JournalLedger from '../JournalLedger.tsx';
+import GeneralLedger from './GeneralLedger.tsx';
+import TrialBalancePage from './TrialBalancePage.tsx';
+// FIX: Corrected import path for InvoiceOCR. It's in the parent directory.
+import InvoiceOCR from '../InvoiceOCR.tsx';
+import PaymentManagement from './PaymentManagement.tsx';
+import LaborCostManagement from './LaborCostManagement.tsx';
+// FIX: PeriodClosingPage is a named export.
+import { PeriodClosingPage } from './PeriodClosingPage.tsx';
 import PlaceholderPage from '../PlaceholderPage.tsx';
-import BillingManagement from './accounting/BillingManagement.tsx';
+import BillingManagement from './BillingManagement.tsx';
 
-import { JournalEntry, InvoiceData, Page } from '../types.ts';
+import { JournalEntry, InvoiceData, Page } from '../../types.ts';
 
 const AccountingPage: React.FC<any> = (props) => {
     const { page, journalEntries, accountItems, onAddEntry, addToast, requestConfirmation, jobs, applications, onNavigate, customers, employees, onRefreshData, allocationDivisions, allUsers } = props;
@@ -29,7 +31,7 @@ const AccountingPage: React.FC<any> = (props) => {
                     description: `仕入 ${data.vendorName} (${data.description})`,
                     credit: data.totalAmount,
                     debit: 0,
-                    status: 'posted',
+                    status: 'posted' as 'posted',
                 };
                 onAddEntry(creditEntry);
                 
@@ -38,7 +40,7 @@ const AccountingPage: React.FC<any> = (props) => {
                     description: `仕入 ${data.vendorName}`,
                     debit: data.totalAmount,
                     credit: 0,
-                    status: 'posted',
+                    status: 'posted' as 'posted',
                 }
                 onAddEntry(debitEntry);
                 addToast('買掛金と経費が計上されました。', 'success');
@@ -52,14 +54,14 @@ const AccountingPage: React.FC<any> = (props) => {
                     description: `支払実施: ${supplier}`,
                     debit: amount,
                     credit: 0,
-                    status: 'posted',
+                    status: 'posted' as 'posted',
                 };
                  const cashEntry = {
                     account: '普通預金',
                     description: `支払: ${supplier}`,
                     debit: 0,
                     credit: amount,
-                    status: 'posted',
+                    status: 'posted' as 'posted',
                 };
                 await onAddEntry(paymentEntry);
                 await onAddEntry(cashEntry);

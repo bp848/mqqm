@@ -30,7 +30,7 @@ const AccountingPage: React.FC<any> = (props) => {
                     description: `仕入 ${data.vendorName} (${data.description})`,
                     credit: data.totalAmount,
                     debit: 0,
-                    status: 'posted',
+                    status: 'posted' as 'posted',
                 };
                 onAddEntry(creditEntry);
                 
@@ -39,7 +39,7 @@ const AccountingPage: React.FC<any> = (props) => {
                     description: `仕入 ${data.vendorName}`,
                     debit: data.totalAmount,
                     credit: 0,
-                    status: 'posted',
+                    status: 'posted' as 'posted',
                 }
                 onAddEntry(debitEntry);
                 addToast('買掛金と経費が計上されました。', 'success');
@@ -53,14 +53,14 @@ const AccountingPage: React.FC<any> = (props) => {
                     description: `支払実施: ${supplier}`,
                     debit: amount,
                     credit: 0,
-                    status: 'posted',
+                    status: 'posted' as 'posted',
                 };
                  const cashEntry = {
                     account: '普通預金',
                     description: `支払: ${supplier}`,
                     debit: 0,
                     credit: amount,
-                    status: 'posted',
+                    status: 'posted' as 'posted',
                 };
                 await onAddEntry(paymentEntry);
                 await onAddEntry(cashEntry);

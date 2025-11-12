@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
+// FIX: Add missing import for submitApplication.
 import { submitApplication } from '../../services/dataService.ts';
 import { generateWeeklyReportSummary } from '../../services/geminiService.ts';
 import ApprovalRouteSelector from './ApprovalRouteSelector.tsx';

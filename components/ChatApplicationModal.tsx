@@ -1,6 +1,5 @@
-
-
 import React, { useState, useEffect, useRef } from 'react';
+// FIX: Add missing data service imports.
 import { getApplicationCodes, getUsers, submitApplication, getApprovalRoutes } from '../services/dataService';
 import { processApplicationChat } from '../services/geminiService';
 import { User, ApplicationCode, ApprovalRoute } from '../types';
@@ -118,7 +117,8 @@ const ChatApplicationModal: React.FC<ChatApplicationModalProps> = ({ isOpen, onC
             
             let submissionData;
             try {
-                submissionData = safeJsonParse(aiResponseText);
+                // FIX: Explicitly cast to the expected submission data type
+                submissionData = safeJsonParse(aiResponseText) as { applicationCodeId: UUID; formData: any; approvalRouteId: UUID };
             } catch (jsonError) {
                 const newAiMessage: Message = { id: `model-${Date.now()}`, role: 'model', content: aiResponseText };
                 setMessages(prev => [...prev, newAiMessage]);

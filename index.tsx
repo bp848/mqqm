@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
+import './styles.css';
 import { supabase, hasSupabaseCredentials } from './services/supabaseClient';
 // FIX: Import all necessary functions from dataService. Many of these were missing.
 import { 
@@ -18,7 +19,8 @@ import LoginPage from './components/LoginPage';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import JobList from './components/JobList';
-import CustomerList from './components/CustomerList';
+// FIX: CustomerList is a named export.
+import { CustomerList } from './components/CustomerList';
 import LeadManagementPage from './components/sales/LeadManagementPage';
 import SalesPipelinePage from './components/sales/SalesPipelinePage';
 import EstimateManagementPage from './components/sales/EstimateManagementPage';
@@ -53,7 +55,8 @@ import { Loader, PlusCircle, Bug } from './components/Icons';
 import { ToastContainer } from './components/Toast';
 import ConfirmationDialog from './components/ConfirmationDialog';
 import DemoModeBanner from './components/DemoModeBanner';
-import DatabaseSetupInstructionsModal from './components/DatabaseSetupInstructionsModal';
+// FIX: DatabaseSetupInstructionsModal is a named export.
+import { DatabaseSetupInstructionsModal } from './components/DatabaseSetupInstructionsModal';
 import BugReportChatModal from './components/BugReportChatModal';
 
 

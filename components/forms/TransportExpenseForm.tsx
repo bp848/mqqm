@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
+// FIX: Add missing import for submitApplication.
 import { submitApplication } from '../../services/dataService.ts';
 import { extractInvoiceDetails } from '../../services/geminiService.ts';
 import ApprovalRouteSelector from './ApprovalRouteSelector.tsx';
@@ -29,7 +30,6 @@ const TRANSPORT_MODES = ['電車', 'バス', 'タクシー', '飛行機', 'そ�
 
 const readFileAsBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-        const reader = new FileReader();
         reader.onload = () => typeof reader.result === 'string' ? resolve(reader.result.split(',')[1]) : reject("Read failed");
         reader.onerror = error => reject(error);
         reader.readAsDataURL(file);

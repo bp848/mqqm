@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+// FIX: Add missing import for submitApplication.
 import { submitApplication } from '../../services/dataService.ts';
 import { Loader, Sparkles, AlertTriangle } from '../Icons.tsx';
 import { User } from '../../types.ts';

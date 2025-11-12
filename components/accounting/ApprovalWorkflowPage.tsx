@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import ApplicationList from '../ApplicationList.tsx';
 import ApplicationDetailModal from '../ApplicationDetailModal.tsx';
-import { getApplications, getApplicationCodes, approveApplication, rejectApplication } from '../../services/dataService.ts';
+// FIX: Add missing dataService imports.
+import { getApplications, getApplicationCodes, approveApplication, rejectApplication, getUsers, getApprovalRoutes } from '../../services/dataService.ts';
 import { ApplicationWithDetails, ApplicationCode, EmployeeUser, Toast, Customer, AccountItem, Job, PurchaseOrder, Department, AllocationDivision } from '../../types.ts';
 import { Loader, AlertTriangle } from '../Icons.tsx';
 
 // Form components
-// FIX: Change to default import for ExpenseReimbursementForm
-import ExpenseReimbursementForm from '../forms/ExpenseReimbursementForm.tsx';
+// FIX: Change to named import for ExpenseReimbursementForm
+import { ExpenseReimbursementForm } from '../forms/ExpenseReimbursementForm.tsx';
 import TransportExpenseForm from '../forms/TransportExpenseForm.tsx';
 import LeaveApplicationForm from '../forms/LeaveApplicationForm.tsx';
 import ApprovalForm from '../forms/ApprovalForm.tsx';
